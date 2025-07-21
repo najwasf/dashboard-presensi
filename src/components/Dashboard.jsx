@@ -1,10 +1,14 @@
+// src/components/Dashboard.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import History from "./Hiistory";
+import TambahDataset from "./TambahDataset";
+import "./Dashboard.css"; // ✅ CSS terpisah
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showHistory, setShowHistory] = useState(false);
+  const [showTambahDataset, setShowTambahDataset] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
@@ -12,31 +16,60 @@ const Dashboard = () => {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h2>👋 Selamat Datang di Dashboard Presensi</h2>
-      <p>Gunakan menu di bawah untuk navigasi:</p>
+    <div className="dashboard-container">
+      <div className="sidebar">
+        {/* ✅ Logo Gambar */}
+        <img
+          src={require("../assets/kelasrobot.png")}
+          alt="KelasRobot"
+          className="logo"
+        />
 
-      <div style={{ marginTop: "1.5rem" }}>
-        <button
-          onClick={() => setShowHistory(!showHistory)}
-          style={{ marginRight: "1rem", padding: "0.5rem 1rem" }}
-        >
-          📋 {showHistory ? "Sembunyikan" : "Tampilkan"} Riwayat Presensi
-        </button>
+        <div className="menu">
+          <button
+            onClick={() => {
+              setShowHistory(!showHistory);
+              setShowTambahDataset(false);
+            }}
+            className="button default"
+          >
+            📋 {showHistory ? "Sembunyikan" : "Lihat"} Riwayat
+          </button>
 
-        <button
-          onClick={handleLogout}
-          style={{ padding: "0.5rem 1rem", backgroundColor: "red", color: "white" }}
-        >
+          <button
+            onClick={() => {
+              setShowTambahDataset(!showTambahDataset);
+              setShowHistory(false);
+            }}
+            className="button green"
+          >
+            ➕ {showTambahDataset ? "Tutup" : "Tambah"} Dataset
+          </button>
+        </div>
+
+        <button onClick={handleLogout} className="button red logout">
           🔓 Logout
         </button>
       </div>
 
-      {showHistory && (
-        <div style={{ marginTop: "2rem" }}>
-          <History />
-        </div>
-      )}
+      <div className="content">
+        <h2 className="welcome">👋 Selamat Datang Admin</h2>
+        <p className="description">
+          Silakan gunakan menu di sebelah kiri untuk navigasi fitur dashboard presensi wajah.
+        </p>
+
+        {showHistory && (
+          <div className="section">
+            <History />
+          </div>
+        )}
+
+        {showTambahDataset && (
+          <div className="section">
+            <TambahDataset />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
