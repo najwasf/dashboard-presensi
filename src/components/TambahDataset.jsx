@@ -14,7 +14,7 @@ const TambahDataset = () => {
     e.preventDefault();
 
     if (!name || !image) {
-      setMessage("Nama dan foto harus diisi.");
+      setMessage("❌ Nama dan foto harus diisi.");
       setIsError(true);
       return;
     }
@@ -47,6 +47,23 @@ const TambahDataset = () => {
 
   return (
     <div className="form-container">
+      {message && (
+        <div
+          className="notification"
+          style={{
+            backgroundColor: isError ? "#ffdddd" : "#ddffdd",
+            color: isError ? "#cc0000" : "#006600",
+            padding: "10px",
+            borderRadius: "8px",
+            marginBottom: "20px",
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          {message}
+        </div>
+      )}
+
       <h2 className="form-title">🧑‍💼 Tambah Dataset Wajah</h2>
       <form onSubmit={handleSubmit}>
         <label>Nama Lengkap:</label>
@@ -66,12 +83,6 @@ const TambahDataset = () => {
         />
 
         <button type="submit">Upload</button>
-
-        {message && (
-          <p className="form-message" style={{ color: isError ? "red" : "green" }}>
-            {message}
-          </p>
-        )}
       </form>
     </div>
   );
