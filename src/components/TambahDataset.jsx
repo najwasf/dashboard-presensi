@@ -1,5 +1,5 @@
 // src/components/TambahDataset.jsx
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import axios from "axios";
 import "./TambahDataset.css";
 
@@ -7,6 +7,7 @@ const TambahDataset = () => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState("");
+  const fileInputRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,12 +27,23 @@ const TambahDataset = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      setMessage(response.data.message || "✅ Upload berhasil!");
+
+      if (response.status === 200 && response.data?.message) {
+        setMessage(response.data.message);
+      } else {
+        setMessage("✅ Upload berhasil!");
+      }
+
       setName("");
       setImage(null);
+      fileInputRef.current.value = null;
     } catch (error) {
-      console.error(error);
-      setMessage("❌ Upload gagal.");
+      console.error("Upload error:", error);
+      if (error.response?.data?.message) {
+        setMessage("❌ " + error.response.data.message);
+      } else {
+        setMessage("❌ Upload gagal. Coba periksa server atau koneksi.");
+      }
     }
   };
 
@@ -51,6 +63,7 @@ const TambahDataset = () => {
         <input
           type="file"
           accept="image/*"
+          ref={fileInputRef}
           onChange={(e) => setImage(e.target.files[0])}
         />
 
