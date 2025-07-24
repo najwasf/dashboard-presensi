@@ -7,13 +7,15 @@ const TambahDataset = () => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState("");
+  const [isError, setIsError] = useState(false);
   const fileInputRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name || !image) {
-      setMessage("❗ Nama dan foto harus diisi.");
+      setMessage("Nama dan foto harus diisi.");
+      setIsError(true);
       return;
     }
 
@@ -28,22 +30,18 @@ const TambahDataset = () => {
         },
       });
 
-      if (response.status === 200 && response.data?.message) {
-        setMessage(response.data.message);
-      } else {
-        setMessage("✅ Upload berhasil!");
-      }
+      const msg = response?.data?.message || "Upload berhasil!";
+      setMessage("✅ " + msg);
+      setIsError(false);
 
+      // Reset input
       setName("");
       setImage(null);
       fileInputRef.current.value = null;
     } catch (error) {
-      console.error("Upload error:", error);
-      if (error.response?.data?.message) {
-        setMessage("❌ " + error.response.data.message);
-      } else {
-        setMessage("❌ Upload gagal. Coba periksa server atau koneksi.");
-      }
+      const errMsg = error?.response?.data?.message || "Upload gagal. Coba periksa server atau koneksi.";
+      setMessage("❌ " + errMsg);
+      setIsError(true);
     }
   };
 
@@ -69,7 +67,11 @@ const TambahDataset = () => {
 
         <button type="submit">Upload</button>
 
-        {message && <p className="form-message">{message}</p>}
+        {message && (
+          <p className="form-message" style={{ color: isError ? "red" : "green" }}>
+            {message}
+          </p>
+        )}
       </form>
     </div>
   );
