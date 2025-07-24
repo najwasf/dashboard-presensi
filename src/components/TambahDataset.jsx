@@ -6,64 +6,35 @@ import "./TambahDataset.css";
 const TambahDataset = () => {
   const [name, setName] = useState("");
   const [image, setImage] = useState(null);
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
   const fileInputRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !image) {
-      setMessage("❌ Nama dan foto harus diisi.");
-      setIsError(true);
-      return;
-    }
+    if (!name || !image) return;
 
     const formData = new FormData();
     formData.append("name", name);
     formData.append("image", image);
 
     try {
-      const response = await axios.post("http://localhost:5000/upload_dataset", formData, {
+      await axios.post("http://localhost:5000/upload_dataset", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      const msg = response?.data?.message || "Upload berhasil!";
-      setMessage("✅ " + msg);
-      setIsError(false);
-
-      // Reset input
+      // Reset form setelah upload
       setName("");
       setImage(null);
       fileInputRef.current.value = null;
     } catch (error) {
-      const errMsg = error?.response?.data?.message || "Upload gagal. Coba periksa server atau koneksi.";
-      setMessage("❌ " + errMsg);
-      setIsError(true);
+      // Gagal upload: tidak tampilkan apa-apa
     }
   };
 
   return (
     <div className="form-container">
-      {message && (
-        <div
-          className="notification"
-          style={{
-            backgroundColor: isError ? "#ffdddd" : "#ddffdd",
-            color: isError ? "#cc0000" : "#006600",
-            padding: "10px",
-            borderRadius: "8px",
-            marginBottom: "20px",
-            fontWeight: "bold",
-            textAlign: "center",
-          }}
-        >
-          {message}
-        </div>
-      )}
-
       <h2 className="form-title">🧑‍💼 Tambah Dataset Wajah</h2>
       <form onSubmit={handleSubmit}>
         <label>Nama Lengkap:</label>
