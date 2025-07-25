@@ -13,8 +13,8 @@ const History = () => {
     onValue(presensiRef, (snapshot) => {
       const entries = snapshot.val();
       if (entries) {
-        const result = Object.entries(entries).map(([nama, value]) => ({
-          nama,
+        const result = Object.entries(entries).map(([_, value]) => ({
+          nama: value.nama || "-",
           jam_masuk: value.jam_masuk || "-",
           jam_keluar: value.jam_keluar || "-",
         }));

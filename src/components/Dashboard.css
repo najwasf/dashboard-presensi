@@ -76,3 +76,39 @@
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+/* ==== DARK MODE ==== */
+.dashboard-container.dark .content {
+  background-color: #181a1f;
+  color: #e0e0e0;
+}
+
+.dashboard-container.dark .description {
+  color: #bbb;
+}
+
+.dashboard-container.dark .section {
+  background-color: #2b2d33;
+  color: #e0e0e0;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+}
+/* ==== TABEL RIWAYAT PRESENSI (SELALU LIGHT) ==== */
+.section table {
+  background-color: #fff;
+  color: #000;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.section table th,
+.section table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.section table th {
+  background-color: #f0f0f0;
+}
+
+.section table tr:nth-child(even) {
+  background-color: #fafafa;
+}

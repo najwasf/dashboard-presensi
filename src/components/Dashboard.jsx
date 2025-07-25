@@ -1,5 +1,5 @@
 // src/components/Dashboard.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import History from "./Hiistory";
 import TambahDataset from "./TambahDataset";
@@ -9,16 +9,21 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [showHistory, setShowHistory] = useState(false);
   const [showTambahDataset, setShowTambahDataset] = useState(false);
+  const [darkMode, setDarkMode] = useState(false); // 🌙 Mode gelap
 
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     navigate("/login");
   };
 
+  // ⬛ Tambahkan class body saat dark mode
+  useEffect(() => {
+    document.body.className = darkMode ? "dark-mode" : "";
+  }, [darkMode]);
+
   return (
-    <div className="dashboard-container">
+    <div className={`dashboard-container ${darkMode ? "dark" : ""}`}>
       <div className="sidebar">
-        {/* ✅ Logo Gambar */}
         <img
           src={require("../assets/kelasrobot.png")}
           alt="KelasRobot"
@@ -44,6 +49,13 @@ const Dashboard = () => {
             className="button green"
           >
             ➕ {showTambahDataset ? "Tutup" : "Tambah"} Dataset
+          </button>
+
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="button purple"
+          >
+            {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
           </button>
         </div>
 
