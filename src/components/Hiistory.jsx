@@ -13,13 +13,17 @@ const History = () => {
     onValue(presensiRef, (snapshot) => {
       const entries = snapshot.val();
       if (entries) {
-        const result = Object.entries(entries).map(([id, value]) => ({
-          id,
-          ...value,
+        const result = Object.entries(entries).map(([nama, value]) => ({
+          nama,
+          jam_masuk: value.jam_masuk || "-",
+          jam_keluar: value.jam_keluar || "-",
         }));
-        result.sort((a, b) => new Date(b.waktu) - new Date(a.waktu));
+
+        // Urutkan berdasarkan jam_masuk terbaru
+        result.sort((a, b) => new Date(b.jam_masuk) - new Date(a.jam_masuk));
+
         setData(result);
-        setFilteredData(result); // awalnya tampilkan semua
+        setFilteredData(result);
       } else {
         setData([]);
         setFilteredData([]);
@@ -34,7 +38,7 @@ const History = () => {
       setFilteredData(data); // reset
     } else {
       const filtered = data.filter((item) => {
-        const itemDate = new Date(item.waktu).toISOString().slice(0, 10);
+        const itemDate = new Date(item.jam_masuk).toISOString().slice(0, 10);
         return itemDate === selected;
       });
       setFilteredData(filtered);
@@ -43,7 +47,11 @@ const History = () => {
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(
-      filteredData.map(({ nama, waktu }) => ({ Nama: nama, Waktu: waktu }))
+      filteredData.map(({ nama, jam_masuk, jam_keluar }) => ({
+        Nama: nama,
+        "Jam Masuk": jam_masuk,
+        "Jam Keluar": jam_keluar,
+      }))
     );
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Riwayat Presensi");
@@ -79,14 +87,16 @@ const History = () => {
         <thead>
           <tr style={{ backgroundColor: "#f0f0f0" }}>
             <th>Nama</th>
-            <th>Waktu</th>
+            <th>Jam Masuk</th>
+            <th>Jam Keluar</th>
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((item) => (
-            <tr key={item.id}>
+          {filteredData.map((item, index) => (
+            <tr key={index}>
               <td>{item.nama}</td>
-              <td>{item.waktu}</td>
+              <td>{item.jam_masuk}</td>
+              <td>{item.jam_keluar}</td>
             </tr>
           ))}
         </tbody>
